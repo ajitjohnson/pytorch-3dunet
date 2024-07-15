@@ -1,0 +1,105 @@
+# Trained on data from the 2018 Kaggle Data Science Bowl: https://www.kaggle.com/c/data-science-bowl-2018/data
+model:
+  name: UNet2D
+  in_channels: 1
+  out_channels: 1
+  layer_order: bcr
+  num_groups: 2
+  f_maps: [32, 64, 128]
+  final_sigmoid: true
+  is_segmentation: true
+trainer:
+  checkpoint_dir: /Users/aj/Dropbox (Partners HealthCare)/nirmal lab/softwares/dev/pytorch-3dunet/example_model
+  resume: null
+  pre_trained: null
+  validate_after_iters: 250
+  log_after_iters: 250
+  max_num_epochs: 2
+  max_num_iterations: 150000
+  eval_score_higher_is_better: True
+optimizer:
+  learning_rate: 0.0002
+  weight_decay: 0.00001
+loss:
+  name: BCEDiceLoss
+  skip_last_target: true
+eval_metric:
+  name: BlobsAveragePrecision
+  use_last_target: true
+  metric: 'ap'
+lr_scheduler:
+  name: ReduceLROnPlateau
+  mode: max
+  factor: 0.2
+  patience: 30
+loaders:
+  # how many subprocesses to use for data loading
+  batch_size: 32
+  num_workers: 8
+  # path to the raw data within the H5
+  raw_internal_path: /raw
+  # path to the the label data withtin the H5
+  label_internal_path: /label
+
+  train:
+    file_paths:
+      - /Users/aj/Downloads/test/CSPOT/combinedTrainingData/training
+    slice_builder:
+      name: SliceBuilder
+      patch_shape: [1, 64, 64]
+      stride_shape: [1, 64, 64]
+      skip_shape_check: true
+
+    transformer:
+      raw:
+        - name: Standardize
+        - name: ToTensor
+          expand_dims: true
+      label:
+        - name: Relabel
+        - name: BlobsToMask
+          append_label: true
+        - name: ToTensor
+          expand_dims: true
+
+  test:
+    file_paths:
+      - /Users/aj/Downloads/test/CSPOT/combinedTrainingData/test
+    slice_builder:
+      name: SliceBuilder
+      patch_shape: [1, 64, 64]
+      stride_shape: [1, 64, 64]
+      skip_shape_check: true
+
+    transformer:
+      raw:
+        - name: Standardize
+        - name: ToTensor
+          expand_dims: true
+      label:
+        - name: Relabel
+        - name: BlobsToMask
+          append_label: true
+        - name: ToTensor
+          expand_dims: true
+
+  val:
+    file_paths:
+      - /Users/aj/Downloads/test/CSPOT/combinedTrainingData/validation
+    slice_builder:
+      name: SliceBuilder
+      patch_shape: [1, 64, 64]
+      stride_shape: [1, 64, 64]
+      skip_shape_check: true
+
+    transformer:
+      raw:
+        - name: Standardize
+        - name: ToTensor
+          expand_dims: true
+      label:
+        - name: Relabel
+        - name: BlobsToMask
+          append_label: true
+        - name: ToTensor
+          expand_dims: true
