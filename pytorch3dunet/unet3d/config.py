@@ -55,13 +55,11 @@ def load_config():
     config = yaml.safe_load(open(config_path, "r"))
     _override_config(args, config)
 
-    device = config.get("device", None)
-    if device == "cpu":
-        logger.warning(
-            "CPU mode forced in config, this will likely result in slow training/prediction"
-        )
-        config["device"] = "cpu"
-        return config
+    device = config.get('device', None)
+    if device == 'cpu':
+        logger.warning('CPU mode forced in config, this will likely result in slow training/prediction')
+        config['device'] = 'cpu'
+        return config, config_path
 
     # if torch.cuda.is_available():
     #    config['device'] = 'cuda'
