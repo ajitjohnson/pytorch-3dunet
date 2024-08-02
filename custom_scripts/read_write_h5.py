@@ -13,6 +13,7 @@ import os
 import re
 import numpy as np
 import tifffile
+import matplotlib.pyplot as plt
 
 def read_image_label_pairs(folder_path, extension=".tif"):
     """
@@ -93,19 +94,27 @@ import matplotlib.pyplot as plt
 
 
 path = '/Users/aj/Dropbox (Partners HealthCare)/nirmal lab/resources/exemplarData/cspotExampleData/CSPOT/TrainingData/CD3D/train.h5'
-path ='/Users/aj/Downloads/Movie1_t00003_crop_gt.h5'
+path ='/Users/aj/Desktop/cspotExampleData/h5_trial/thumbnails.h5'
+
+path = '/Users/aj/Desktop/cspotExampleData/h5_trial/train/train.h5'
+path = '/Users/aj/Desktop/cspotExampleData/h5_trial/validation/validation.h5'
+path = '/Users/aj/Desktop/cspotExampleData/h5_trial/test/test.h5'
+
+path = '/Users/aj/Downloads/2dunet/train/N_404_ds2x.h5'
+
+
 with h5py.File(path, 'r') as f:
     raw = f['raw'][...]
     label = f['label'][...]
+    names = f['name'][...]
     
 
 raw.shape
 label.shape
 
 
-mid_raw = np.expand_dims(raw[raw.shape[0] // 2], 0)
-mid_label = np.expand_dims(label[raw.shape[0] // 2], 0)
-
+mid_raw = np.expand_dims(raw[10], 0)
+mid_label = np.expand_dims(label[10], 0)
 
 plt.imshow(mid_raw[0])
 plt.imshow(mid_label[0])

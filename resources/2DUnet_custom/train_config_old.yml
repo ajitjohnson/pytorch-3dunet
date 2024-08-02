@@ -9,12 +9,12 @@ model:
   final_sigmoid: true
   is_segmentation: true
 trainer:
-  checkpoint_dir: /Users/aj/Dropbox (Partners HealthCare)/nirmal lab/softwares/dev/pytorch-3dunet/example_model
+  checkpoint_dir: /Users/aj/Desktop/cspotExampleData/h5_trial/model
   resume: null
   pre_trained: null
-  validate_after_iters: 250
-  log_after_iters: 250
-  max_num_epochs: 2
+  validate_after_iters: 5
+  log_after_iters: 6
+  max_num_epochs: 20
   max_num_iterations: 150000
   eval_score_higher_is_better: True
 optimizer:
@@ -34,7 +34,7 @@ lr_scheduler:
   patience: 30
 loaders:
   # how many subprocesses to use for data loading
-  batch_size: 32
+  batch_size: 1
   num_workers: 8
   # path to the raw data within the H5
   raw_internal_path: /raw
@@ -43,28 +43,7 @@ loaders:
 
   train:
     file_paths:
-      - /Users/aj/Downloads/test/CSPOT/combinedTrainingData/training
-    slice_builder:
-      name: SliceBuilder
-      patch_shape: [1, 64, 64]
-      stride_shape: [1, 64, 64]
-      skip_shape_check: true
-
-    transformer:
-      raw:
-        - name: Standardize
-        - name: ToTensor
-          expand_dims: true
-      label:
-        - name: Relabel
-        - name: BlobsToMask
-          append_label: true
-        - name: ToTensor
-          expand_dims: true
-
-  test:
-    file_paths:
-      - /Users/aj/Downloads/test/CSPOT/combinedTrainingData/test
+      - /Users/aj/Partners HealthCare Dropbox/Ajit Nirmal/nirmal lab/softwares/dev/pytorch-3dunet/example_data/train
     slice_builder:
       name: SliceBuilder
       patch_shape: [1, 64, 64]
@@ -85,7 +64,7 @@ loaders:
 
   val:
     file_paths:
-      - /Users/aj/Downloads/test/CSPOT/combinedTrainingData/validation
+      - /Users/aj/Partners HealthCare Dropbox/Ajit Nirmal/nirmal lab/softwares/dev/pytorch-3dunet/example_data/validation
     slice_builder:
       name: SliceBuilder
       patch_shape: [1, 64, 64]

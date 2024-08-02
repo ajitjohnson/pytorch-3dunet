@@ -11,6 +11,24 @@ from skimage.segmentation import find_boundaries
 # WARN: use fixed random state for reproducibility; if you want to randomize on each run seed with `time.time()` e.g.
 GLOBAL_RANDOM_STATE = np.random.RandomState(47)
 
+# custom functions
+class LocalNorm:
+    def __init__(self, random_state, execution_probability=0.5,  **kwargs):
+        self.random_state = random_state
+        self.execution_probability = execution_probability
+
+    def __call__(self, m):
+        if self.random_state.uniform() < self.execution_probability:
+            # Calculate the 99.9th percentile of the pixel intensities
+            percentile_value = np.percentile(m, 99.9)
+            # Normalize the image by dividing each pixel by the 99.9th percentile
+            if percentile_value > 0:  # Avoid division by zero
+                m = m / percentile_value
+            return m
+        return m
+
+
+# existing functions
 
 class Compose(object):
     def __init__(self, transforms):
